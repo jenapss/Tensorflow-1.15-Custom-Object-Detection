@@ -124,10 +124,22 @@ label_map_path: "models/research/object_detection/training/labelmap.pbtxt"
 Save the file after the changes have been made. That’s it! The training job is all configured and ready to go!
 
 # 💪 Training Model
+From the \object_detection directory, issue the following command to begin training:
+```
+python train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/faster_rcnn_inception_v2_pets.config
 
+```
+If everything has been set up correctly, TensorFlow will initialize the training. The initialization can take up to 30 seconds before the actual training begins. 
+Training process can be long and boring process but you should be monitoring your loss value. On initialization step it is assigned to some big number but then, during training it should be decreasing constantly. You need to wait until it drops below 0.5 value. In that moment you can surely stop the training process and export your results to final model.
 
 
 # 🆒 Exporting trained model
+Now that training is complete, the last step is to generate the frozen inference graph (.pb file). From the \object_detection folder, issue the following command, where “XXXX” in “model.ckpt-XXXX” should be replaced with the highest-numbered .ckpt file in the training folder:
+
+```
+python export_inference_graph.py --input_type image_tensor --pipeline_config_path training/faster_rcnn_inception_v2_pets.config --trained_checkpoint_prefix training/model.ckpt-XXXX --output_directory inference_graph
+```
+This creates a frozen_inference_graph.pb file in the \object_detection\inference_graph folder. The .pb file contains the object detection classifier.
 
 
 
