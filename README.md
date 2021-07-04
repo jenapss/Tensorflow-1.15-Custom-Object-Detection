@@ -78,10 +78,58 @@ If you are a newbie to object detection then you might be encountering the topic
   
 
 # Configuring the config files before training.
-  
+The last thing to do before training is to create a label map and edit the training configuration file.
+Label map
+The label map tells the trainer what each object is by defining a mapping of class names to class ID numbers. Use a text editor to create a new file and save it as labelmap.pbtxt in the C:\tensorflow1\models\research\object_detection\training folder. (Make sure the file type is .pbtxt, not .txt !) In the text editor, copy or type in the label map in the format below (the example below is the label map for my Pinochle Deck Card Detector):
+```
+item {
+  id: 1
+  name: 'Carrot'
+}
+
+item {
+  id: 2
+  name: 'Cucumber'
+}
+
+item {
+  id: 3
+  name: 'Zucchini'
+}
+
+```
+
+Configure training
+Finally, the object detection training pipeline must be configured. It defines which model and what parameters will be used for training. This is the last step before running training!
+
+Navigate to models\research\object_detection\samples\configs and copy the faster_rcnn_inception_v2_pets.config file into the \object_detection\training directory. Then, open the file with a text editor. There are several changes to make to the .config file, mainly changing the number of classes and examples, and adding the file paths to the training data.
+
+Make the following changes to the faster_rcnn_inception_v2_pets.config file. Note: The paths must be entered with single forward slashes (NOT backslashes), or TensorFlow will give a file path error when trying to train the model! Also, the paths must be in double quotation marks ( " ), not single quotation marks ( ' ).
+
+Line 9. Change num_classes to the number of different objects you want the classifier to detect. For the above basketball, shirt, and shoe detector, it would be num_classes : 3 .
+
+Line 106. Change fine_tune_checkpoint to:
+
+fine_tune_checkpoint : "models/research/object_detection/faster_rcnn_inception_v2_coco_2018_01_28/model.ckpt"
+Lines 123 and 125. In the train_input_reader section, change input_path and label_map_path to:
+
+input_path : "models/research/object_detection/train.record"
+label_map_path: "models/research/object_detection/training/labelmap.pbtxt"
+Line 130. Change num_examples to the number of images you have in the \images\test directory.
+
+Lines 135 and 137. In the eval_input_reader section, change input_path and label_map_path to:
+
+input_path : "models/research/object_detection/test.record"
+label_map_path: "models/research/object_detection/training/labelmap.pbtxt"
+Save the file after the changes have been made. That’s it! The training job is all configured and ready to go!
 
 # 💪 Training Model
 
+
+
 # 🆒 Exporting trained model
+
+
+
 
 
